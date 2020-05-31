@@ -1,20 +1,17 @@
 <template>
   <Layout>
+    <div class="flex-page">
+      <div>
+        <h1>Car Lease Stats</h1>
 
-    <!-- Learn how to use images here: https://gridsome.org/docs/images -->
-    <g-image alt="Example image" src="~/favicon.png" width="135" />
-
-    <h1>Hello, world!</h1>
-
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur excepturi labore tempore expedita, et iste tenetur suscipit explicabo! Dolores, aperiam non officia eos quod asperiores
-    </p>
-
-    <p class="home-links">
-      <a class="btn mb-2 btn-primary" href="https://gridsome.org/docs/" target="_blank" rel="noopener">Gridsome Docs</a>
-      <a href="https://github.com/gridsome/gridsome" target="_blank" rel="noopener">GitHub</a>
-    </p>
-
+        Today is: {{today}} <br>
+        Lease Started on: {{startOfLease}} <br>
+        Days into Lease: {{daysIntoLease}} ({{percentDaysIntoLease}}%)<br>
+        On Track Miles Count: <strong>{{onTrackMilesCount}}</strong><br>
+        Miles Left on Lease: {{milesToGo}}
+      </div>
+      <g-image src="~/assets/images/car.jpg" width="500"/>
+    </div>
   </Layout>
 </template>
 
@@ -22,12 +19,53 @@
 export default {
   metaInfo: {
     title: 'Hello, world!'
+  },
+  data: function(){
+    return {
+      today: new Date().toLocaleDateString(),
+      startOfLease: new Date("March 25, 2019").toLocaleDateString()
+    }
+  },
+  computed:{
+    daysIntoLease(){
+      let today = new Date()
+      let startOfLease = new Date("March 25, 2019")
+      return Math.floor((today - startOfLease) / (60*60*24*1000))
+    },
+    percentDaysIntoLease(){
+      let daysIntoLease = Math.floor((new Date() - new Date("March 25, 2019")) / (60*60*24*1000))
+      return ((daysIntoLease / 1096) * 100).toFixed(1)
+    },
+    onTrackMilesCount(){
+      let daysIntoLease = Math.floor((new Date() - new Date("March 25, 2019")) / (60*60*24*1000))
+      let milesPerDay = 10000 / 365
+      return Math.floor(daysIntoLease * milesPerDay)
+    },
+    milesToGo(){
+      return 30000 - this.onTrackMilesCount
+    }
   }
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .home-links a {
   margin-right: 1rem;
+}
+.flex-page{
+  display: flex;
+  justify-content: space-between;
+  & > div{
+    margin-right: 30px;
+
+    h1{
+      margin-top: 0;
+      line-height: 1;
+    }
+  }
+
+  img{
+    max-width: 100%;
+  }
 }
 </style>
